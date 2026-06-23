@@ -46,17 +46,17 @@ is queryable.
 | `data/users.csv` | `user_id, liked_track_ids` | Pseudonymized user profiles (numeric IDs only). `liked_track_ids` is a space-separated list of in-catalog track IDs, e.g. `df["liked_track_ids"].str.split()` |
 | `data/tracks.csv` | `track_id, name, artist_name, duration` | Display info for the tracks referenced by the user profiles |
 
-Use the user profiles as **seeds for content-based taste profiles** (the sound of what a
+Use the user profiles as seeds for content-based taste profiles (the sound of what a
 user likes), not as collaborative-filtering / co-listening signals. See
 [DATA_LICENSE.md](DATA_LICENSE.md) for music attribution and data-use terms.
 
 ### Audio
 
-There is no catalog file to download: a public MP3 is available for **any** track at a
+Audio is available as public MP3 for any track at a
 deterministic URL, so you can fetch audio for any catalog or search-result track ID:
 
 ```
-https://prod-1.storage.jamendo.com/download/track/<track_id>/mp32/
+https://prod-1.storage.jamendo.com/download/track/391816/mp32/
 ```
 
 Replace `<track_id>` with the numeric ID (no API key needed). A small number of tracks
