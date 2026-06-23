@@ -16,7 +16,7 @@ Read the full brief in [CHALLENGE.md](CHALLENGE.md).
 |---|---|
 | `CHALLENGE.md` | The challenge: what to build, ideas, and judging criteria |
 | `CHALLENGE_AGREEMENT.md` | Terms for participating in the Cyanite challenge (accepted at registration) |
-| `data/` | The data pack (catalog, taste profiles, audio links) |
+| `data/` | The data pack (taste profiles + track display info) |
 | `docs/cyanite_tag_vocabularies.md` | The controlled vocabularies for Cyanite's tags (for building filters) |
 | `.env.sample` | Template for your Cyanite API key |
 | `LICENSE` | MIT, for the code and docs in this repo |
@@ -43,14 +43,24 @@ is queryable.
 
 | File | Columns | Notes |
 |---|---|---|
-| `data/catalog.csv` | `track_id, mp3_download_url` | The full queryable catalog (~361,600 tracks) plus a public MP3 URL per track |
-| `data/tracks.csv` | `track_id, name, artist_name, duration` | Display info for tracks referenced by the user profiles |
-| `data/users.csv` | `user_id, n_likes_available` | Pseudonymized user profiles (numeric IDs only) |
-| `data/user_likes.csv` | `user_id, track_id` | Each user's liked tracks, restricted to the catalog |
+| `data/users.csv` | `user_id, liked_track_ids` | Pseudonymized user profiles (numeric IDs only). `liked_track_ids` is a space-separated list of in-catalog track IDs, e.g. `df["liked_track_ids"].str.split()` |
+| `data/tracks.csv` | `track_id, name, artist_name, duration` | Display info for the tracks referenced by the user profiles |
 
 Use the user profiles as **seeds for content-based taste profiles** (the sound of what a
 user likes), not as collaborative-filtering / co-listening signals. See
 [DATA_LICENSE.md](DATA_LICENSE.md) for music attribution and data-use terms.
+
+### Audio
+
+There is no catalog file to download: a public MP3 is available for **any** track at a
+deterministic URL, so you can fetch audio for any catalog or search-result track ID:
+
+```
+https://prod-1.storage.jamendo.com/download/track/<track_id>/mp32/
+```
+
+Replace `<track_id>` with the numeric ID (no API key needed). A small number of tracks
+that disallow download on Jamendo may not resolve.
 
 ## Cyanite API in one line
 
