@@ -4,8 +4,7 @@
 > How can people discover music through how it actually sounds, by taste, by mood, by
 > "something like this but…", in ways they can understand?
 
-Build a music discovery / recommendation experience on the Cyanite API, grounded in
-audio (how a track sounds), not in collaborative filtering (what other people listened to).
+Build a music discovery / recommendation experience on the [Cyanite API](https://docs.cyanite.ai/reference/api/cyanite-api/), grounded in audio (how a track sounds).
 
 ---
 
@@ -17,13 +16,25 @@ Build discovery that listens.
 
 You have a catalog of ~357,000 tracks already analyzed and indexed by Cyanite's audio AI.
 Recommendations should be content/audio-based, driven by mood, instrumentation, energy,
-character, and similarity in sound, and reachable through natural language, seed tracks,
-and a listener's taste (taste = the sound of what they like). And they should
-be explainable.
+character, and similarity in sound;
+and reachable through natural language, seed tracks,
+and a listener's taste (taste = the sound of what they like).
+And they should be explainable.
+
+### Cross-cutting requirement: Explainability
+
+Let a user ask "why this track?" and get a convincing answer grounded in the audio
+analysis: Cyanite's tags/scores, the auto-description, or the prompt/filters you inferred, how the results relate to the given search reference.
 
 ---
 
-## How the Cyanite API works (the core loop)
+## Cyanite API workflow
+
+The core loop:
+```
+search (prompt / seed id(s) [+ metadataFilter])  ->  ranked {track, score}
+   -> fetch model outputs per track id  ->  rank / explain / display
+```
 
 Four endpoints (base URL `https://rest-api.cyanite.ai/v1`, auth header `x-api-key`):
 
@@ -36,11 +47,6 @@ Four endpoints (base URL `https://rest-api.cyanite.ai/v1`, auth header `x-api-ke
 
 2. **Model outputs (tagging)**: search returns track ids/titles, not the analysis. To explain
    or re-rank a result, fetch its tags from `GET /library-tracks/{id}/models?model=...`.
-
-```
-search (prompt / seed id(s) [+ metadataFilter])  ->  ranked {track, score}
-   -> fetch model outputs per track id  ->  rank / explain / display
-```
 
 > No raw embeddings/vectors are exposed. Build taste/personalization on track ids, prompts,
 > tags, and metadata filters.
@@ -60,9 +66,6 @@ Operators: `$gte $lte $gt $lt $eq $ne $in $nin $exists`, plus the logical `$and`
 
 Filter keys follow the model outputs (see guides/model_outputs.md); valid tag values are in
 guides/tag_vocabularies.md.
-
-Because everything is grounded in audio analysis, every recommendation can be explained in
-human terms ("shares the same calm, acoustic mood and a similar slow tempo").
 
 ---
 
@@ -96,29 +99,18 @@ result and where.
 | Representative segment | Start/end of the most representative part of the track (great for previews) |
 | Augmented keywords | A weighted dictionary of free keyword associations |
 
-(Tagging is provided by Cyanite, so lean on the Cyanite API.)
-
----
-
-## Cross-cutting requirement: Explainability
-
-Let a user ask "why this track?" and get a convincing answer grounded in the audio
-analysis: Cyanite's tags/scores, the auto-description, or the prompt/filters you inferred, how the results relate to the given search reference.
+Additional information on the vocabularies for Cyanite's tags is in [docs/cyanite_tag_vocabularies.md](docs/cyanite_tag_vocabularies.md).
 
 ---
 
 ## What we provide (data pack)
 
-So you can focus on Cyanite, not on crawling Jamendo:
-
-- Catalog: ~357k tracks are indexed and queryable; any track ID returned by the API is in the catalog.
+- Catalog: ~357k tracks sourced from [Jamendo](https://www.jamendo.com/) are indexed and queryable; any track ID returned by the API is in the catalog.
 - Audio: a public MP3 is available for any track at a deterministic URL (see the repo README), so you can get audio without any API or extra file.
 - Track display info: `track_id, name, artist, duration` for referenced tracks.
 - User profiles: real users with their liked tracks (use as seeds for content-based
   taste profiles, not as co-listening signals). Each profile's likes span multiple artists,
-  so they capture a genuine taste rather than a single album.
-
-Good seeds for taste profiling and offline evaluation (e.g. hold out some of a user's likes
+  so they capture a genuine taste rather than a single album.<br> Good seeds for taste profiling and offline evaluation (e.g. hold out some of a user's likes
 and try to recover them).
 
 (If needed, the Jamendo public API is available for extra live data)
@@ -129,6 +121,20 @@ and try to recover them).
 
 Pick one, combine, or invent your own. Make Cyanite audio-based search central and keep
 it explainable.
+
+<!-- TODO Project ideas still feel a bit technical and need more _product_ focus.
+Maybe we can add something like
+Unexpected Discovery
+- Music for Productivity: An app that curates tracks based on focus levels, energy, or mood (using Cyanite’s mood/character tags) to help users concentrate, relax, or get energized.
+- Soundtrack for Stories: Let users input a short story or script, and the app generates a playlist that matches the emotional arc of the narrative.
+- Gaming Companions: Create dynamic soundtracks for indie games or tabletop RPGs, adapting to in-game events or player mood.
+
+Collaborative Experiences
+"Music Study Group" build study playlists based on the collective taste of a group of users.
+
+Educational and Gameified Experiences
+
+ -->
 
 1. Search as a conversation (steerable discovery).
    Users describe a vibe in natural language and steer: "more energetic… now cinematic…
@@ -153,6 +159,19 @@ it explainable.
    profiles (which moods/genres/instruments/tempo align). Use the representative segment
    for instant previews and the auto-description for narration. (Optional: use tag
    "distance" to re-rank away from an unwanted attribute.)
+
+5. Collaborative Discovery.
+- "Music Study Group": build study playlists based on the collective taste of a group of users.
+- Trade songs with friends: let users share a track combined with a short description of why they like it, and let the recipient explore similar tracks and see how their tastes align.
+
+6. Educational / gamified experiences:
+ - Scavenger Hunt: Hide “easter egg” tracks with specific combinations of tags (e.g., “Find a track with BPM > 120, minor key, and flute”) and reward users who find them.
+ - "Why You Like This" Explorer: Use Cyanite’s genre, instruments, and tempo tags to explain musical concepts, e.g. "You’ve been listening to a lot of swing jazz lately. Did you know that swing jazz often features a walking bass line and syncopated rhythms? Here are some tracks that exemplify these characteristics."
+
+7. Unexpected Discovery
+- Soundtrack for Stories: Let users input a short story or script, and the app generates a playlist that matches the emotional arc of the narrative.
+- Gaming Companions: Create dynamic soundtracks for indie games or tabletop RPGs, adapting to in-game events or player mood.
+- DJ's AI Assistant: Let DJs find tracks that match the vibe of their set, with suggestions for transitions based on mood and tempo and key compatibility.
 
 Stretch / bonus
 - Cross-modal prompting: map an image, short video, or a written brief into a Cyanite
