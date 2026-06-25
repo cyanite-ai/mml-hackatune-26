@@ -4,7 +4,7 @@
 > How can people discover music through how it actually sounds, by taste, by mood, by
 > "something like this but…", in ways they can understand?
 
-Build a music discovery / recommendation experience on the [Cyanite API](https://docs.cyanite.ai/reference/api/cyanite-api/), grounded in audio (how a track sounds).
+Build a music discovery / recommendation experience on the Cyanite API, grounded in audio (how a track sounds).
 
 ---
 

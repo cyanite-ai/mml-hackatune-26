@@ -2,7 +2,7 @@
 
 **Cyanite challenge for HACKATUNE 2026 (Munich Music Labs).**
 
-Build a music discovery experience on the [Cyanite API](https://docs.cyanite.ai/reference/api/cyanite-api/) that recommends tracks based on
+Build a music discovery experience on the Cyanite API that recommends tracks based on
 how they actually sound, driven by natural language, seed tracks, and a listener's
 taste. Every recommendation should be
 explainable, so a user can ask "why this track?" and get a clear answer grounded in
