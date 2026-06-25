@@ -32,6 +32,8 @@ Participation in the challenge does not grant participants any ownership rights 
 
 Any access credentials, API keys, or technical materials provided by Cyanite remain the property of Cyanite and may only be used for the purposes of participation in HACKATUNE 2026.
 
+Use and deletion of Cyanite outputs. Any data, tags, scores, embeddings, or other model outputs that participants obtain from the Cyanite API during the Event ("Cyanite Outputs"), together with the provided dataset and any derivatives, may be used solely for participation in HACKATUNE 2026. Participants shall not publish, redistribute, or otherwise make Cyanite Outputs or the provided dataset available to any third party, and shall delete all copies promptly after the Event, and in any case upon Cyanite's request. This does not prevent participants from publishing or open-sourcing their own original code, provided it does not contain or expose Cyanite Outputs or the provided dataset.
+
 3. Independent Development
 
 Participants acknowledge that Cyanite is actively conducting internal research and product development in areas related to music understanding, conversational search, multimodal retrieval, recommendation systems, and related technologies.
@@ -68,7 +70,7 @@ Ownership of participant projects remains unaffected by such showcase rights.
 
 7. No Confidential Information
 
-Unless explicitly designated otherwise in writing, no information provided by Cyanite as part of the challenge shall be considered confidential.
+Unless explicitly designated otherwise in writing, no information provided by Cyanite as part of the challenge shall be considered confidential, except for API credentials and Cyanite Outputs, which must not be published or redistributed and must be deleted after the Event as set out in Section 2.
 
 8. Limitation of Liability
 
