@@ -122,20 +122,6 @@ and try to recover them).
 Pick one, combine, or invent your own. Make Cyanite audio-based search central and keep
 it explainable.
 
-<!-- TODO Project ideas still feel a bit technical and need more _product_ focus.
-Maybe we can add something like
-Unexpected Discovery
-- Music for Productivity: An app that curates tracks based on focus levels, energy, or mood (using Cyanite’s mood/character tags) to help users concentrate, relax, or get energized.
-- Soundtrack for Stories: Let users input a short story or script, and the app generates a playlist that matches the emotional arc of the narrative.
-- Gaming Companions: Create dynamic soundtracks for indie games or tabletop RPGs, adapting to in-game events or player mood.
-
-Collaborative Experiences
-"Music Study Group" build study playlists based on the collective taste of a group of users.
-
-Educational and Gameified Experiences
-
- -->
-
 1. Search as a conversation (steerable discovery).
    Users describe a vibe in natural language and steer: "more energetic… now cinematic…
    add piano… less dark." An LLM translates the dialogue into Cyanite prompt queries +
