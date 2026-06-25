@@ -138,7 +138,7 @@ Educational and Gameified Experiences
 
 1. Search as a conversation (steerable discovery).
    Users describe a vibe in natural language and steer: "more energetic… now cinematic…
-   add piano… less dark." An LLM translates the dialogue into Cyanite free-text queries +
+   add piano… less dark." An LLM translates the dialogue into Cyanite prompt queries +
    tag filters along tag axes (mood, energy, instruments, tempo). Surface the inferred
    prompt/filters each turn and justify each result from its tags.
 
@@ -150,7 +150,7 @@ Educational and Gameified Experiences
 
 3. Personalized, steerable radio / continuation.
    From a user's likes (or a few seed tracks they pick), generate an ongoing recommendation
-   queue via similar-by-ID re-ranked for tag coherence, with optional free-text nudges
+   queue via similar-by-ID re-ranked for tag coherence, with optional prompt nudges
    ("keep the mood but more orchestral"). Explain each next track via shared tags and
    let users accept/reject to refine the direction.
 
@@ -175,7 +175,7 @@ Educational and Gameified Experiences
 
 Stretch / bonus
 - Cross-modal prompting: map an image, short video, or a written brief into a Cyanite
-  free-text query; explain results via the resulting tags.
+  prompt query; explain results via the resulting tags.
 - Lightweight visualization of the result set (e.g. laid out by mood/energy).
 - Real-time interactive UI, voice input.
 
