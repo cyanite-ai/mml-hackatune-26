@@ -157,7 +157,6 @@ it explainable.
 7. Unexpected Discovery
 - Soundtrack for Stories: Let users input a short story or script, and the app generates a playlist that matches the emotional arc of the narrative.
 - Gaming Companions: Create dynamic soundtracks for indie games or tabletop RPGs, adapting to in-game events or player mood.
-- DJ's AI Assistant: Let DJs find tracks that match the vibe of their set, with suggestions for transitions based on mood and tempo and key compatibility.
 
 Stretch / bonus
 - Cross-modal prompting: map an image, short video, or a written brief into a Cyanite
