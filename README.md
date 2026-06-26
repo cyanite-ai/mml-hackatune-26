@@ -73,6 +73,22 @@ are no raw embeddings or vectors. See [CHALLENGE.md](CHALLENGE.md) for the full 
 **Basics:** base URL `https://rest-api.cyanite.ai/v1`, auth header `x-api-key: <your key>`.
 Fetch a track's tags with `GET /library-tracks/{track_id}/models?model=MoodSimpleV2&model=MainGenreV2&...`
 (see the [starter notebook](notebooks/cyanite_model_outputs.ipynb) for a runnable example).
+## API usage and limits
+
+The API key is shared for the event and usage limits are **pooled across all teams**, so
+please cache results and fetch only what you use, so everyone has capacity for the full
+36 hours. Each action has a per-minute rate limit and an overall event quota:
+
+| Action | Rate limit (per minute) | Event quota (total) |
+|---|---|---|
+| Free-text search | 100 / min | 15,000 |
+| Similarity search | 100 / min | 15,000 |
+| Tagging / model outputs (per track) | 180 / min | 50,000 |
+
+- Exceeding a rate limit returns a rate-limit error; wait a few seconds and retry.
+- Exceeding an event quota stops further calls for that action for the rest of the event.
+- **Cache tags locally and fetch each track once.** A search returns up to 500 IDs; only tag the tracks your app actually surfaces, and avoid bulk-tagging the catalog.
+- Per the [Challenge Agreement](CHALLENGE_AGREEMENT.md), data and model outputs are for event use only: do not publish or redistribute them, and delete them after the event.
 
 ## Terms and licenses
 
