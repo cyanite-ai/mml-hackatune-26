@@ -46,10 +46,20 @@ search (prompt / seed id(s) [+ metadataFilter])  ->  ranked {track, score}
 > tags, and metadata filters.
 
 **Metadata filters.** Both search modes accept an optional `metadataFilter` to keep only tracks
-matching structured criteria (e.g. a BPM range), applied before ranking. Operators include
-`$gte`, `$lte`, `$gt`, `$lt`, `$eq`, `$ne`, `$in`, `$nin`, plus `$and` / `$or`. Example:
-`{"BpmV2.tag": {"$gte": 120, "$lte": 140}}`. Full reference:
-https://api-docs.cyanite.ai/docs/metadata-filters
+matching structured criteria, applied before ranking. It is a MongoDB-style filter keyed by the
+model-output field in **dot notation**, `"<ModelVersion>.<field>"`, where the field is `.tag`
+(single value), `.tags` (array; use `$in` / `$nin`), or `.scores.<tag>` (numeric per-tag score).
+Operators: `$gte $lte $gt $lt $eq $ne $in $nin $exists`, plus the logical `$and` / `$or`.
+
+```json
+{ "BpmV2.tag": { "$gte": 120, "$lte": 140 } }
+{ "MainGenreV2.tags": { "$in": ["rock", "pop"] } }
+{ "MoodSimpleV2.scores.energetic": { "$gte": 0.5 } }
+{ "$and": [ { "TempoV1.tag": { "$eq": "fast" } }, { "InstrumentsV2.tags": { "$in": ["piano"] } } ] }
+```
+
+Filter keys follow the model outputs (see guides/model_outputs.md); valid tag values are in
+guides/tag_vocabularies.md.
 
 Because everything is grounded in audio analysis, every recommendation can be explained in
 human terms ("shares the same calm, acoustic mood and a similar slow tempo").

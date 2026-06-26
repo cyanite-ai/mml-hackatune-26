@@ -82,9 +82,22 @@ embeddings or vectors; build on track ids, prompts, tags, and metadata filters.
 The three search endpoints return `{"items": [{"track": {...}, "score": 0..1}], "pageInfo": {...}}`
 ordered by relevance/similarity; fetch a result's tags via the model-outputs endpoint to explain it.
 
-**Metadata filters:** all search modes accept an optional `metadataFilter`, applied before ranking,
-e.g. `{"BpmV2.tag": {"$gte": 120, "$lte": 140}}`; operators include `$gte $lte $gt $lt $eq $ne $in
-$nin $and $or`. Reference: https://api-docs.cyanite.ai/docs/metadata-filters
+**Metadata filters.** All search modes accept an optional `metadataFilter`, applied before
+ranking. It is a MongoDB-style filter keyed by the model-output field in **dot notation**,
+`"<ModelVersion>.<field>"`. Operators: `$gte $lte $gt $lt $eq $ne $in $nin $exists`, plus the
+logical `$and` / `$or`.
+
+```json
+{ "BpmV2.tag": { "$gte": 120, "$lte": 140 } }
+{ "TempoV1.tag": { "$eq": "fast" } }
+{ "MainGenreV2.tags": { "$in": ["rock", "pop"] } }
+{ "MoodSimpleV2.scores.energetic": { "$gte": 0.5 } }
+{ "$and": [ { "BpmV2.tag": { "$gte": 100 } }, { "InstrumentsV2.tags": { "$in": ["piano"] } } ] }
+```
+
+Filter keys follow the model-output fields: `.tag` (single value), `.tags` (array, use `$in` /
+`$nin`), or `.scores.<tag>` (numeric per-tag score). See [model outputs](guides/model_outputs.md)
+for the fields and [tag vocabularies](guides/tag_vocabularies.md) for valid tag values.
 
 See [CHALLENGE.md](CHALLENGE.md) for the loop and the
 [starter notebook](notebooks/cyanite_model_outputs.ipynb) for runnable examples.
