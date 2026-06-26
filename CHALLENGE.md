@@ -147,8 +147,8 @@ it explainable.
    "distance" to re-rank away from an unwanted attribute.)
 
 5. Collaborative Discovery.
-- "Music Study Group": build study playlists based on the collective taste of a group of users.
-- Trade songs with friends: let users share a track combined with a short description of why they like it, and let the recipient explore similar tracks and see how their tastes align.
+   - Group Playlists: build playlists based on the collective taste of a group of users, e.g. build a focus playlist for a study group.
+   - Trade songs with friends: let users share a track combined with a short description of why they like it, and let the recipient explore similar tracks and see how their tastes align.
 
 6. Educational / gamified experiences:
  - Scavenger Hunt: Hide “easter egg” tracks with specific combinations of tags (e.g., “Find a track with BPM > 120, minor key, and flute”) and reward users who find them.
