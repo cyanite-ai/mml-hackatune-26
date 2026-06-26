@@ -15,7 +15,7 @@ Most discovery still runs on keyword search, rigid metadata filters, or collabor
 filtering. All of them miss the most direct signal: what the music actually sounds like.
 Build discovery that listens.
 
-You have a catalog of ~362,000 tracks already analyzed and indexed by Cyanite's audio AI.
+You have a catalog of ~357,000 tracks already analyzed and indexed by Cyanite's audio AI.
 Recommendations should be content/audio-based, driven by mood, instrumentation, energy,
 character, and similarity in sound, and reachable through natural language, seed tracks,
 and a listener's taste (taste = the sound of what they like). And they should
