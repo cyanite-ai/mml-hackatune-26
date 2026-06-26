@@ -17,7 +17,8 @@ Read the full brief in [CHALLENGE.md](CHALLENGE.md).
 | `CHALLENGE.md` | The challenge: what to build, ideas, and judging criteria |
 | `CHALLENGE_AGREEMENT.md` | Terms for participating in the Cyanite challenge (accepted at registration) |
 | `data/` | The data pack (taste profiles + track display info) |
-| `guides/` | Cyanite API guides: quick start, model outputs, and tag vocabularies |
+| `notebooks/` | Python starter notebook for the Cyanite API (model outputs; search to come) |
+| `guides/` | Cyanite reference: model outputs and tag vocabularies |
 | `.env.sample` | Template for your Cyanite API key |
 | `LICENSE` | MIT, for the code and docs in this repo |
 | `DATA_LICENSE.md` | Terms for the data pack (Creative Commons music, pseudonymized profiles) |
@@ -30,12 +31,12 @@ Read the full brief in [CHALLENGE.md](CHALLENGE.md).
    cp .env.sample .env
    # then edit .env and set CYANITE_API_KEY
    ```
-3. Read [CHALLENGE.md](CHALLENGE.md) and the [Cyanite API quick start](guides/quick_start.md); skim the [tag vocabularies](guides/tag_vocabularies.md).
+3. Read [CHALLENGE.md](CHALLENGE.md), then open the starter notebook [`notebooks/cyanite_model_outputs.ipynb`](notebooks/cyanite_model_outputs.ipynb); skim the [tag vocabularies](guides/tag_vocabularies.md).
 4. Explore `data/` (see below) and start querying the Cyanite API by track ID or text prompt.
 
-For the Cyanite API itself (authentication, search, fetching tags by track ID), see the
-guides in [`guides/`](guides/): [quick start](guides/quick_start.md) and
-[model outputs](guides/model_outputs.md).
+For the Cyanite API (authentication, fetching tags by track ID), use the starter notebook
+[`notebooks/cyanite_model_outputs.ipynb`](notebooks/cyanite_model_outputs.ipynb) and the
+[model outputs reference](guides/model_outputs.md).
 
 ## The data pack
 
@@ -69,6 +70,9 @@ Search returns ranked track IDs (free-text prompt search or similar-by-ID, with 
 filtering); you then fetch each result's tags from the Tagging API by track ID. There
 are no raw embeddings or vectors. See [CHALLENGE.md](CHALLENGE.md) for the full loop.
 
+**Basics:** base URL `https://rest-api.cyanite.ai/v1`, auth header `x-api-key: <your key>`.
+Fetch a track's tags with `GET /library-tracks/{track_id}/models?model=MoodSimpleV2&model=MainGenreV2&...`
+(see the [starter notebook](notebooks/cyanite_model_outputs.ipynb) for a runnable example).
 ## API usage and limits
 
 The API key is shared for the event and usage limits are **pooled across all teams**, so
