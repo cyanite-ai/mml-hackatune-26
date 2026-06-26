@@ -150,11 +150,7 @@ it explainable.
    - Group Playlists: build playlists based on the collective taste of a group of users, e.g. build a focus playlist for a study group.
    - Trade songs with friends: let users share a track combined with a short description of why they like it, and let the recipient explore similar tracks and see how their tastes align.
 
-6. Educational / gamified experiences:
- - Scavenger Hunt: Hide “easter egg” tracks with specific combinations of tags (e.g., “Find a track with BPM > 120, minor key, and flute”) and reward users who find them.
- - "Why You Like This" Explorer: Use Cyanite’s genre, instruments, and tempo tags to explain musical concepts, e.g. "You’ve been listening to a lot of swing jazz lately. Did you know that swing jazz often features a walking bass line and syncopated rhythms? Here are some tracks that exemplify these characteristics."
-
-7. Unexpected Discovery
+6. Unexpected Discovery
 - Soundtrack for Stories: Let users input a short story or script, and the app generates a playlist that matches the emotional arc of the narrative.
 - Gaming Companions: Create dynamic soundtracks for indie games or tabletop RPGs, adapting to in-game events or player mood.
 
