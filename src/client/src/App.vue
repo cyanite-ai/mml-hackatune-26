@@ -23,13 +23,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { findSimilarLibraryTracks, type SimilarTrackItem } from "@/lib/cyanite"
+import {
+  CYANITE_MODEL_OUTPUTS,
+  findSimilarLibraryTracks,
+  getLibraryTrackModels,
+  type SimilarTrackItem,
+} from "@/lib/cyanite"
 import {
   testOpenAiStructuredOutput,
   type OpenAiStructuredTestResponse,
 } from "@/lib/openai"
-import { tracks } from "@/lib/tracks"
+import { tracks, type Track } from "@/lib/tracks"
 import { users, type User } from "@/lib/users"
+
+interface ModelOutputTarget {
+  id: string
+  title: string
+  subtitle: string
+  source: "Liked track" | "Similar track"
+  localTrackId?: string
+}
 
 const tracksById = new Map(tracks.map((track) => [track.track_id, track]))
 const tracksByCyaniteId = new Map(tracks.map((track) => [track.cyanite_id, track]))
@@ -44,6 +57,11 @@ const isFindingSimilar = ref(false)
 const openAiTest = ref<OpenAiStructuredTestResponse | null>(null)
 const openAiTestError = ref("")
 const isTestingOpenAi = ref(false)
+const selectedModelOutputTarget = ref<ModelOutputTarget | null>(null)
+const modelOutputJson = ref("")
+const modelOutputError = ref("")
+const isFetchingModelOutput = ref(false)
+let modelOutputRequestId = 0
 
 const trackRowHeight = 60
 const overscanRows = 6
@@ -110,6 +128,7 @@ function selectUser(user: User) {
   selectedSeedTrackIds.value = []
   similarTracks.value = []
   similarError.value = ""
+  clearModelOutput()
 }
 
 function isTrackSelected(trackId: string) {
@@ -146,6 +165,67 @@ function getSimilarTrackTitle(item: SimilarTrackItem) {
 
 function getSimilarTrackArtist(item: SimilarTrackItem) {
   return getSimilarTrackLocalMatch(item)?.artist_name ?? "Cyanite library track"
+}
+
+function clearModelOutput() {
+  modelOutputRequestId += 1
+  selectedModelOutputTarget.value = null
+  modelOutputJson.value = ""
+  modelOutputError.value = ""
+  isFetchingModelOutput.value = false
+}
+
+async function fetchModelOutput(target: ModelOutputTarget) {
+  const requestId = modelOutputRequestId + 1
+  modelOutputRequestId = requestId
+  selectedModelOutputTarget.value = target
+  modelOutputJson.value = ""
+  modelOutputError.value = ""
+  isFetchingModelOutput.value = true
+
+  try {
+    const data = await getLibraryTrackModels(target.id)
+
+    if (requestId !== modelOutputRequestId) {
+      return
+    }
+
+    modelOutputJson.value = JSON.stringify(data, null, 2)
+  } catch (error) {
+    if (requestId !== modelOutputRequestId) {
+      return
+    }
+
+    modelOutputError.value =
+      error instanceof Error ? error.message : "Could not fetch inferred AI models."
+  } finally {
+    if (requestId === modelOutputRequestId) {
+      isFetchingModelOutput.value = false
+    }
+  }
+}
+
+function selectLikedTrack(track: Track) {
+  toggleSeedTrack(track.track_id)
+  void fetchModelOutput({
+    id: track.cyanite_id,
+    title: track.name,
+    subtitle: track.artist_name,
+    source: "Liked track",
+    localTrackId: track.track_id,
+  })
+}
+
+function selectSimilarTrack(item: SimilarTrackItem) {
+  const localTrack = getSimilarTrackLocalMatch(item)
+
+  void fetchModelOutput({
+    id: item.track.id,
+    title: getSimilarTrackTitle(item),
+    subtitle: getSimilarTrackArtist(item),
+    source: "Similar track",
+    localTrackId: localTrack?.track_id,
+  })
 }
 
 async function fetchSimilarTracks() {
@@ -277,7 +357,7 @@ function formatDuration(seconds: number) {
                         ? 'bg-accent text-accent-foreground'
                         : '',
                     ]"
-                    @click="toggleSeedTrack(track.track_id)"
+                    @click="selectLikedTrack(track)"
                   >
                     <span
                       class="flex h-5 w-5 shrink-0 items-center justify-center rounded border"
@@ -386,10 +466,13 @@ function formatDuration(seconds: number) {
                 </div>
 
                 <div v-else-if="similarTracks.length" class="divide-y rounded-md border">
-                  <div
+                  <button
                     v-for="item in similarTracks"
                     :key="item.track.id"
-                    class="p-3"
+                    type="button"
+                    class="block w-full p-3 text-left transition-colors hover:bg-accent hover:text-accent-foreground"
+                    :class="selectedModelOutputTarget?.id === item.track.id ? 'bg-accent text-accent-foreground' : ''"
+                    @click="selectSimilarTrack(item)"
                   >
                     <div class="flex items-start justify-between gap-3">
                       <div class="min-w-0">
@@ -411,7 +494,7 @@ function formatDuration(seconds: number) {
                     <div class="mt-2 truncate font-mono text-xs text-muted-foreground">
                       {{ item.track.id }}
                     </div>
-                  </div>
+                  </button>
                 </div>
 
                 <div
@@ -419,6 +502,60 @@ function formatDuration(seconds: number) {
                   class="flex min-h-32 items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground"
                 >
                   No similar tracks yet
+                </div>
+              </section>
+
+              <section class="space-y-3 border-t pt-5">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div class="min-w-0">
+                    <h2 class="text-sm font-semibold">Inferred AI Models</h2>
+                    <p
+                      v-if="selectedModelOutputTarget"
+                      class="mt-1 truncate text-sm text-muted-foreground"
+                    >
+                      {{ selectedModelOutputTarget.source }} - {{ selectedModelOutputTarget.title }}
+                    </p>
+                  </div>
+                  <div class="flex shrink-0 flex-wrap gap-2">
+                    <Badge variant="outline">
+                      {{ CYANITE_MODEL_OUTPUTS.length }} models
+                    </Badge>
+                    <Badge
+                      v-if="selectedModelOutputTarget"
+                      variant="secondary"
+                      class="font-mono"
+                    >
+                      {{ selectedModelOutputTarget.localTrackId ?? selectedModelOutputTarget.id }}
+                    </Badge>
+                  </div>
+                </div>
+
+                <div
+                  v-if="modelOutputError"
+                  class="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive"
+                >
+                  <AlertCircle class="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                  <span>{{ modelOutputError }}</span>
+                </div>
+
+                <div
+                  v-if="isFetchingModelOutput"
+                  class="flex min-h-32 items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground"
+                >
+                  <Loader2 class="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                  Loading model output
+                </div>
+
+                <pre
+                  v-else-if="modelOutputJson"
+                  class="max-h-[34rem] overflow-auto rounded-md border bg-muted/40 p-3 text-xs leading-relaxed"
+                >{{ modelOutputJson }}</pre>
+
+                <div
+                  v-else
+                  class="flex min-h-32 items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground"
+                >
+                  No model output selected
                 </div>
               </section>
 

@@ -10,10 +10,18 @@ const repoRoot = path.resolve(dirname, "../..")
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, repoRoot, "")
   const apiUrl = env.VITE_API_URL || env.VITE_BACKEND_URL || "http://127.0.0.1:8001"
-  const apiProxy = {
+  const cyaniteApiKey = env.VITE_CYANITE_API_KEY || env.CYANITE_API_KEY || ""
+  const cyaniteBaseUrl = "https://rest-api.cyanite.ai/v1"
+  const proxy = {
     "/api": {
       target: apiUrl,
       changeOrigin: true,
+    },
+    "/cyanite": {
+      target: cyaniteBaseUrl,
+      changeOrigin: true,
+      headers: cyaniteApiKey ? { "x-api-key": cyaniteApiKey } : {},
+      rewrite: (requestPath: string) => requestPath.replace(/^\/cyanite/, ""),
     },
   }
 
@@ -28,10 +36,10 @@ export default defineConfig(({ mode }) => {
       fs: {
         allow: [dirname, repoRoot],
       },
-      proxy: apiProxy,
+      proxy,
     },
     preview: {
-      proxy: apiProxy,
+      proxy,
     },
   }
 })

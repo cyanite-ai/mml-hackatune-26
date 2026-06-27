@@ -108,7 +108,7 @@ def post_cyanite_json(path: str, query: dict[str, Any], payload: dict[str, Any])
     if not api_key:
         raise ApiError(500, "CYANITE_API_KEY is not configured.")
 
-    base_url = os.environ.get("CYANITE_BASE_URL", CYANITE_BASE_URL).rstrip("/")
+    base_url = CYANITE_BASE_URL.rstrip("/")
     url = f"{base_url}{path}?{urlencode(query)}"
     body = json.dumps(payload).encode("utf-8")
     req = Request(
