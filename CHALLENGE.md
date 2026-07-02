@@ -29,7 +29,7 @@ Four endpoints (base URL `https://rest-api.cyanite.ai/v1`, auth header `x-api-ke
 
 1. **Search** returns a ranked list of results, each `{track, score}` where `score` is a
    relevance/similarity value in 0 to 1. Three ways to search:
-   - **Find by text prompt**: natural language to matching tracks (`POST /private-alpha/library-tracks/search`).
+   - **Find by text prompt**: natural language to matching tracks (`POST /private-alpha/library-tracks/prompt-search`).
    - **Find similar (single seed)**: a track to acoustically similar tracks (`POST /private-alpha/library-tracks/{id}/similar`).
    - **Find similar (multi-track, up to 10 seeds)**: similar to the mean of several tracks, e.g. a user's likes (`POST /private-alpha/library-tracks/similar`).
    - All three accept an optional **`metadataFilter`** to restrict candidates before ranking (see below).

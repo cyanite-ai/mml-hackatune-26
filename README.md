@@ -74,7 +74,7 @@ that disallow download on Jamendo may not resolve.
 Base URL `https://rest-api.cyanite.ai/v1`, auth header `x-api-key: <your key>`. There are no raw
 embeddings or vectors; build on track ids, prompts, tags, and metadata filters.
 
-- **Find by text prompt**: `POST /private-alpha/library-tracks/search`, body `{"query": "..."}`
+- **Find by text prompt**: `POST /private-alpha/library-tracks/prompt-search`, body `{"query": "..."}`
 - **Find similar (single seed)**: `POST /private-alpha/library-tracks/{id}/similar`
 - **Find similar (multi-track, up to 10 seeds)**: `POST /private-alpha/library-tracks/similar`, body `{"tracks": [{"id": "libtr_..."}]}`
 - **Model outputs (tags)**: `GET /library-tracks/{id}/models?model=MoodSimpleV2&model=MainGenreV2&...`
